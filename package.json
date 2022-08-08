@@ -1,12 +1,12 @@
 {
-  "name": "raspberrypi-database",
+  "name": "raspberrypi-db-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev src/index.ts",
-    "docker:push": "npm run build && docker buildx build --platform=linux/amd64,linux/arm64 -t shiviraj/raspberrypi-database:latest --push .",
+    "docker:push": "docker buildx build --platform=linux/amd64,linux/arm64 -t shiviraj/raspberrypi-db-server:latest --push .",
     "build": "tsc",
     "start": "mkdir -p dist/db && node dist"
   },
