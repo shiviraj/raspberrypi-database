@@ -17,19 +17,19 @@ const FileService = {
         })
     },
 
-    load(): Map<string, Map<string, Array<any>>> {
+    load(): Map<string, Map<string, Array<Document>>> {
         const databases = readdirSync(pathName)
         return databases.reduce((result, database) => {
             const collections = readdirSync(path.join(pathName, database))
             const data = collections.reduce((collectionsData, collection) => {
-                const data: Array<any> = JSON.parse(readFileSync(path.join(pathName, database, collection), 'utf-8'));
+                const data: Array<Document> = JSON.parse(readFileSync(path.join(pathName, database, collection), 'utf-8'));
                 const collectionName = collection.split('.')[0]
                 collectionsData.set(collectionName, data)
                 return collectionsData
-            }, new Map<string, Array<any>>())
+            }, new Map<string, Array<Document>>())
             result.set(database, data)
             return result
-        }, new Map<string, Map<string, Array<any>>>())
+        }, new Map<string, Map<string, Array<Document>>>())
     },
 
     createEmptyFile(dbName: string, collection: string) {
@@ -39,7 +39,6 @@ const FileService = {
                 if (error) {
                     return reject(false)
                 }
-                console.log(`created file ${fileName}`)
                 resolve(true)
             })
         })

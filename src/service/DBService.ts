@@ -2,9 +2,10 @@ import FileService from "./FileService";
 import {randomUUID} from "crypto";
 import {NextFunction, Request, Response} from "express";
 
-export type DB = { database: Map<string, Array<any>>; databaseName: string; collection: Array<any>; collectionName: string }
-
+export type DB = { database: Map<string, Array<Document>>; databaseName: string; collection: Array<Document>; collectionName: string }
+export type Document = {}
 const databases = FileService.load()
+console.log(databases)
 
 const DBService = {
     createDatabase(name: string): string {
@@ -24,13 +25,13 @@ const DBService = {
         return collection
     },
 
-    insert(collection: Array<any>, payload: Map<string, any>): Map<string, any> {
+    insert(collection: Array<Document>, payload: Document): Document {
         const data = {...payload, _id: randomUUID()}
         collection.push(data)
         return data
     },
 
-    insertOne(db: DB, payload: Map<string, any>): Map<string, any> {
+    insertOne(db: DB, payload: Document): Document {
         const result = this.insert(db.collection, payload)
         FileService.write(db).then()
         return result
@@ -40,7 +41,7 @@ const DBService = {
         return databases.get(dbName)!!.get(collection)!!
     },
 
-    insertMany(db: DB, payloads: Array<Map<string, any>>): Array<Map<string, any>> {
+    insertMany(db: DB, payloads: Array<Document>): Array<Document> {
         const result = payloads.map((payload) => this.insert(db.collection, payload))
         FileService.write(db).then()
         return result
