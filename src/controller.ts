@@ -67,7 +67,7 @@ controller.post("/insert-one", (req: Request, res: Response): void => {
         const db: DB = res.locals.db
         const payload: Document = req.body.payload
         res.send(DBService.insertOne(db, payload))
-        logger.info({message: "Successfully inserted data into collection", data: {payload}})
+        logger.info({message: "Successfully inserted data into collection"})
     } catch (e) {
         if (e instanceof DuplicateKeyError) {
             res.status(409).send({message: e.message})
@@ -83,7 +83,7 @@ controller.post("/insert-many", (req: Request, res: Response): void => {
         const payloads: Array<Document> = req.body.payload;
         const db: DB = res.locals.db
         res.send(DBService.insertMany(db, payloads))
-        logger.info({message: "Successfully inserted many data into collection", data: {payloads}})
+        logger.info({message: "Successfully inserted many data into collection"})
     } catch (e) {
         if (e instanceof DuplicateKeyError) {
             res.status(409).send({message: e.message})
