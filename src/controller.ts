@@ -138,7 +138,7 @@ controller.put("/update-one", (req: Request, res: Response): void => {
     try {
         const db: DB = res.locals.db
         const query: { query: Document, document: Document } = req.body.payload;
-        res.send(DBService.updateOne(db, query.query, document))
+        res.send(DBService.updateOne(db, query.query, query.document))
         logger.info({message: "Successfully updated data into collection", data: {query}})
     } catch (e) {
         res.status(500).send({message: `Failed to update data into collection`})
