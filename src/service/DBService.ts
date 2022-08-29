@@ -92,8 +92,8 @@ const DBService = {
         return db.collection.filter(this.isMatched(query))
     },
 
-    findOne(collection: Array<Document>, query: Document): Document | null {
-        return collection.find(this.isMatched(query)) || null
+    findOne(collection: Array<Document>, query: Document, exact: boolean = true): Document | null {
+        return collection.find(this.isMatched(query, exact)) || null
     },
 
     update(db: DB, query: Document, updatedDocument: Document): Document {
@@ -118,8 +118,10 @@ const DBService = {
         return document
     },
 
-    isMatched(query: Document): (document: Document) => boolean {
-        return (document: Document) => Object.keys(query).every(key => query[key] === document[key]);
+    isMatched(query: Document, exact: boolean = true): (document: Document) => boolean {
+        return (document: Document) => Object.keys(query).every(key => {
+            return exact ? query[key] === document[key] : document[key].startsWith(query[key]);
+        });
     },
 
     isNotMatched(query: Document): (document: Document) => boolean {
