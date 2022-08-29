@@ -111,8 +111,9 @@ controller.post("/find", (req: Request, res: Response): void => {
 controller.post("/find-one", (req: Request, res: Response): void => {
   try {
     const db: DB = res.locals.db
-    const query: Document = req.body.payload;
-    res.send(DBService.findOne(db.collection, query))
+    const query: Document = req.body.payload.query;
+    const exact: boolean = req.body.payload.exact;
+    res.send(DBService.findOne(db.collection, query, exact))
     logger.info({message: "Successfully find data from collection", data: {query}})
   } catch (e) {
     res.status(500).send({message: `Failed to find data from collection`})
