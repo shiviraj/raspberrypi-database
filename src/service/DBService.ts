@@ -1,4 +1,5 @@
 import FileService from "./FileService";
+import _ from "lodash"
 import {randomUUID} from "crypto";
 import {NextFunction, Request, Response} from "express";
 import {DuplicateKeyError} from "../error/DuplicateKeyError";
@@ -42,9 +43,9 @@ const DBService = {
     if (payload.hasOwnProperty("_id") && collection.some(this.isMatched({_id: payload._id}))) {
       throw new DuplicateKeyError()
     } else {
-      const data = {_id: randomUUID(), ...payload}
-      collection.push(data)
-      return data
+      payload._id = payload._id || randomUUID()
+      collection.push(payload)
+      return payload
     }
   },
 
@@ -89,10 +90,13 @@ const DBService = {
   },
 
   find(db: DB, query: Document): Array<Document> {
-    return db.collection.filter(this.isMatched(query))
+    return _.filter(db.collection, _.matches(query))
   },
 
   findOne(collection: Array<Document>, query: Document, exact: boolean = true): Document | null {
+    if (exact) {
+      return _.find(collection, query) || null
+    }
     return collection.find(this.isMatched(query, exact)) || null
   },
 
